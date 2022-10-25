@@ -51,7 +51,7 @@ static const struct uart_driver_api uart_bitbang_driver_api = {
 };
 
 
-DEVICE_AND_API_INIT(uart_bitbang, "uart0", &uart_bitbang_init,
-		    NULL, NULL,
-		    PRE_KERNEL_1, CONFIG_KERNEL_INIT_PRIORITY_DEVICE,
-		    &uart_bitbang_driver_api);
+DEVICE_DEFINE(uart_bitbang, "uart0", &uart_bitbang_init,
+	      NULL, NULL, NULL,
+	      PRE_KERNEL_1, CONFIG_KERNEL_INIT_PRIORITY_DEVICE,
+	      &uart_bitbang_driver_api);
