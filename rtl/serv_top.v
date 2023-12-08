@@ -574,6 +574,114 @@ module serv_top
       end
    endgenerate
 
+   generate
+      if (1/*debug_rf*/) begin : gen_debug_rf
+	 reg update_rd = 1'b0;
+	 reg [31:0] dbg_rd = 32'hxxxxxxxx;
+	 reg [31:0] dbg_csr = 32'hxxxxxxxx;
+	 reg [31:0] dbg_mstatus  = 32'hxxxxxxxx;
+	 reg [31:0] dbg_mie      = 32'hxxxxxxxx;
+	 reg [31:0] dbg_mcause   = 32'hxxxxxxxx;
+	 reg [31:0] dbg_mscratch = 32'hxxxxxxxx;
+	 reg [31:0] dbg_mtvec    = 32'hxxxxxxxx;
+	 reg [31:0] dbg_mepc     = 32'hxxxxxxxx;
+	 reg [31:0] dbg_mtval    = 32'hxxxxxxxx;
+	 reg [31:0] x1  = 32'hxxxxxxxx;
+	 reg [31:0] x2  = 32'hxxxxxxxx;
+	 reg [31:0] x3  = 32'hxxxxxxxx;
+	 reg [31:0] x4  = 32'hxxxxxxxx;
+	 reg [31:0] x5  = 32'hxxxxxxxx;
+	 reg [31:0] x6  = 32'hxxxxxxxx;
+	 reg [31:0] x7  = 32'hxxxxxxxx;
+	 reg [31:0] x8  = 32'hxxxxxxxx;
+	 reg [31:0] x9  = 32'hxxxxxxxx;
+	 reg [31:0] x10 = 32'hxxxxxxxx;
+	 reg [31:0] x11 = 32'hxxxxxxxx;
+	 reg [31:0] x12 = 32'hxxxxxxxx;
+	 reg [31:0] x13 = 32'hxxxxxxxx;
+	 reg [31:0] x14 = 32'hxxxxxxxx;
+	 reg [31:0] x15 = 32'hxxxxxxxx;
+	 reg [31:0] x16 = 32'hxxxxxxxx;
+	 reg [31:0] x17 = 32'hxxxxxxxx;
+	 reg [31:0] x18 = 32'hxxxxxxxx;
+	 reg [31:0] x19 = 32'hxxxxxxxx;
+	 reg [31:0] x20 = 32'hxxxxxxxx;
+	 reg [31:0] x21 = 32'hxxxxxxxx;
+	 reg [31:0] x22 = 32'hxxxxxxxx;
+	 reg [31:0] x23 = 32'hxxxxxxxx;
+	 reg [31:0] x24 = 32'hxxxxxxxx;
+	 reg [31:0] x25 = 32'hxxxxxxxx;
+	 reg [31:0] x26 = 32'hxxxxxxxx;
+	 reg [31:0] x27 = 32'hxxxxxxxx;
+	 reg [31:0] x28 = 32'hxxxxxxxx;
+	 reg [31:0] x29 = 32'hxxxxxxxx;
+	 reg [31:0] x30 = 32'hxxxxxxxx;
+	 reg [31:0] x31 = 32'hxxxxxxxx;
+
+	 always @(posedge clk) begin
+	    update_rd <= cnt_done & ctrl_pc_en & rd_op;
+
+	    if (o_wen0)
+              dbg_rd <= {o_wdata0,dbg_rd[31:1]};
+
+	    //End of instruction that writes to RF
+	    if (update_rd) begin
+	       case (rd_addr)
+		 5'd1  : x1  <= dbg_rd;
+		 5'd2  : x2  <= dbg_rd;
+		 5'd3  : x3  <= dbg_rd;
+		 5'd4  : x4  <= dbg_rd;
+		 5'd5  : x5  <= dbg_rd;
+		 5'd6  : x6  <= dbg_rd;
+		 5'd7  : x7  <= dbg_rd;
+		 5'd8  : x8  <= dbg_rd;
+		 5'd9  : x9  <= dbg_rd;
+		 5'd10 : x10 <= dbg_rd;
+		 5'd11 : x11 <= dbg_rd;
+		 5'd12 : x12 <= dbg_rd;
+		 5'd13 : x13 <= dbg_rd;
+		 5'd14 : x14 <= dbg_rd;
+		 5'd15 : x15 <= dbg_rd;
+		 5'd16 : x16 <= dbg_rd;
+		 5'd17 : x17 <= dbg_rd;
+		 5'd18 : x18 <= dbg_rd;
+		 5'd19 : x19 <= dbg_rd;
+		 5'd20 : x20 <= dbg_rd;
+		 5'd21 : x21 <= dbg_rd;
+		 5'd22 : x22 <= dbg_rd;
+		 5'd23 : x23 <= dbg_rd;
+		 5'd24 : x24 <= dbg_rd;
+		 5'd25 : x25 <= dbg_rd;
+		 5'd26 : x26 <= dbg_rd;
+		 5'd27 : x27 <= dbg_rd;
+		 5'd28 : x28 <= dbg_rd;
+		 5'd29 : x29 <= dbg_rd;
+		 5'd30 : x30 <= dbg_rd;
+		 5'd31 : x31 <= dbg_rd;
+		 default : ;
+	       endcase
+	    end // if (update_rd)
+	    if (rd_csr_en) begin
+	       if (cnt_en)
+		 dbg_csr <= {csr_in, dbg_csr[31:1]};
+	       if (update_rd)
+		 if (csr_mstatus_en)
+		   dbg_mstatus <= dbg_csr;
+		 else if (csr_mie_en)
+		   dbg_mie <= dbg_csr;
+		 else if (csr_mcause_en)
+		   dbg_mcause <= dbg_csr;
+		 else if (csr_en)
+		   case (csr_addr)
+		     2'b00 : dbg_mscratch <= dbg_csr;
+		     2'b01 : dbg_mtvec    <= dbg_csr;
+		     2'b10 : dbg_mepc     <= dbg_csr;
+		     2'b11 : dbg_mtval    <= dbg_csr;
+		   endcase // case (csr_addr)
+	    end
+	 end
+      end
+   endgenerate
 
 `ifdef RISCV_FORMAL
    reg [31:0] 	 pc = RESET_PC;
