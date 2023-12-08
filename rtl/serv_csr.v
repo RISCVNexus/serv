@@ -99,8 +99,8 @@ module serv_csr
        Note: To save resources mstatus_mpie (mstatus bit 7) is not
        readable or writable from sw
        */
-      if (i_trap & i_cnt_done)
-	mstatus_mpie <= mstatus_mie;
+      if ((i_trap & i_cnt_done) | i_mstatus_en & i_cnt3)
+	mstatus_mpie <= i_trap ? mstatus_mie : csr_in;
 
       /*
        The four lowest bits in mcause hold the exception code
